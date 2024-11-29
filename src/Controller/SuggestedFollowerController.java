@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 
 public class SuggestedFollowerController {
 
@@ -42,6 +43,9 @@ public class SuggestedFollowerController {
 
 	@FXML
 	public void initialize() {
+		
+		initImageView();
+		
 		followBtn.setOnMouseClicked(event -> {
 			System.out.println("follow...");
 			submitFollow(event);
@@ -56,6 +60,19 @@ public class SuggestedFollowerController {
 
 	}
 
+	// Phương thức khởi tạo clip cho ImageView
+	private void initImageView() {
+		// Tạo đối tượng Circle để cắt hình ảnh thành khuôn tròn
+		Circle clip = new Circle();
+		clip.setRadius(15); // Điều chỉnh bán kính theo kích thước hình ảnh bạn muốn
+		clip.setCenterX(avtFollower.getFitWidth() / 2); // Điều chỉnh vị trí tâm của Circle (giống kích thước ImageView)
+		clip.setCenterY(avtFollower.getFitHeight() / 2); // Điều chỉnh vị trí tâm của Circle (giống kích thước
+															// ImageView)
+
+		// Áp dụng Clip vào ImageView
+		avtFollower.setClip(clip);
+	}
+
 	public Long getFollowedID() {
 		return (Long) this.suggest.get("suggestedID");
 	}
@@ -64,8 +81,8 @@ public class SuggestedFollowerController {
 		this.suggest = suggest;
 		fullnameFollower.setText((String) suggest.get("suggestedUsername"));
 		suggestedFollower.setText((String) suggest.get("suggestedName"));
-//		Image image = new Image(getClass().getResourceAsStream("6e70cf15912f7d4da213cddc6aedccad.jpg"));
-//		avtFollower.setImage(image);
+		Image image = new Image(getClass().getResource("/View/" + suggest.get("suggestedAvt")).toExternalForm());
+		avtFollower.setImage(image);
 
 	}
 

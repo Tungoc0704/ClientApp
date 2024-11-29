@@ -49,10 +49,12 @@ public class MessageItemController {
 
 	public void showPartners(Partner p) {
 		this.partner = p;
-//		avtPartner.setImage(new Image(p.getProfile_picture()));
-		contentMessage.setText("The newest message content...");
+		avtPartner.setImage(
+				new Image(getClass().getResource("/View/"+p.getProfile_picture()).toExternalForm()));
+		contentMessage.setText("This message...");
 		namePartner.setText(p.getUsername());
 		timeChat.setText("04/11/2024");
+		timeChat.wrapTextProperty();
 	}
 
 	public int getPartnerID() {
@@ -88,67 +90,66 @@ public class MessageItemController {
 	}
 
 	public void load_detail_message(int choosed_partner_id) throws IOException {
+		// Xóa tất cả nội dung cũ trong VBox
+		detail_message_vbox.getChildren().clear();
 
+		// Hiển thị giao diện chat (text field, nút gửi,...)
 		showComponent();
 
+		// Lấy danh sách tin nhắn
 		List<DetailMessage> MessageList = new ChatAction().detailMessageList;
+
+		// Duyệt qua danh sách tin nhắn và hiển thị tin nhắn liên quan đến đối tác được
+		// chọn
 		for (DetailMessage dm : MessageList) {
-			if (dm.getSender() == choosed_partner_id) {
-
-				URL resource1 = getClass().getResource("/View/respondent-detail_message.fxml");
-				if (resource1 == null) {
-					System.err.println("FXML file not found!");
-				}
-				FXMLLoader fxmlLoader1 = new FXMLLoader(resource1);
-				fxmlLoader1.setLocation(resource1);
-				AnchorPane responsePane = fxmlLoader1.load();
-
-				RespondentMessageController respondentMessageController = fxmlLoader1.getController();
-				respondentMessageController.setRespondentMessage(dm);
-
-				if (parentController != null) {
-					javafx.scene.control.ScrollPane conversationPane = parentController.getConversationPane();
-					if (conversationPane != null) {
-						detail_message_vbox.setMinWidth(996.0);
-						detail_message_vbox.getChildren().add(responsePane);
-						conversationPane.setContent(detail_message_vbox);
-					} else {
-						System.err.println("conversation pane is null !");
+			if (dm.getSender() == choosed_partner_id || dm.getReceiver() == choosed_partner_id) {
+				// Tin nhắn từ đối tác hoặc tin nhắn mình gửi cho đối tác
+				if (dm.getSender() == choosed_partner_id) {
+					// Tin nhắn từ đối tác
+					URL resource1 = getClass().getResource("/View/respondent-detail_message.fxml");
+					if (resource1 == null) {
+						System.err.println("FXML file not found!");
+						continue;
 					}
+
+					FXMLLoader fxmlLoader1 = new FXMLLoader(resource1);
+					AnchorPane responsePane = fxmlLoader1.load();
+
+					RespondentMessageController respondentMessageController = fxmlLoader1.getController();
+					respondentMessageController.setRespondentMessage(dm);
+
+					detail_message_vbox.getChildren().add(responsePane);
 				} else {
-					System.err.println("parentController is null");
+					// Tin nhắn từ mình gửi
+					URL resource = getClass().getResource("/View/sender-detail-message.fxml");
+					if (resource == null) {
+						System.err.println("FXML file not found!");
+						continue;
+					}
+
+					FXMLLoader fxmlLoader = new FXMLLoader(resource);
+					AnchorPane senderPane = fxmlLoader.load();
+
+					SenderMessageController senderMessageController = fxmlLoader.getController();
+					senderMessageController.setSenderMessage(dm);
+
+					detail_message_vbox.getChildren().add(senderPane);
 				}
 			}
-
-			else {
-				URL resource = getClass().getResource("/View/sender-detail-message.fxml");
-				if (resource == null) {
-					System.err.println("FXML file not found!");
-				}
-				FXMLLoader fxmlLoader = new FXMLLoader(resource);
-				fxmlLoader.setLocation(resource);
-				AnchorPane senderPane = fxmlLoader.load();
-
-				SenderMessageController senderMessageController = fxmlLoader.getController();
-				senderMessageController.setSenderMessage(dm);
-
-				if (parentController != null) {
-					javafx.scene.control.ScrollPane conversationPane = parentController.getConversationPane();
-					if (conversationPane != null) {
-						detail_message_vbox.setMinWidth(996.0);
-						detail_message_vbox.getChildren().add(senderPane);
-						conversationPane.setContent(detail_message_vbox);
-					} else {
-						System.err.println("conversation pane is null !");
-					}
-				} else {
-					System.err.println("parentController is null");
-				}
-
-			}
-
 		}
 
+		// Cập nhật giao diện
+		if (parentController != null) {
+			javafx.scene.control.ScrollPane conversationPane = parentController.getConversationPane();
+			if (conversationPane != null) {
+				detail_message_vbox.setMinWidth(996.0);
+				conversationPane.setContent(detail_message_vbox);
+			} else {
+				System.err.println("conversation pane is null!");
+			}
+		} else {
+			System.err.println("parentController is null");
+		}
 	}
 
 	// khi detail_message is showed => textfield nhập tin nhắn + send_btn +

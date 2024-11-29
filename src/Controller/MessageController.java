@@ -5,6 +5,7 @@ import Model.DetailMessage;
 import Network.ChatAction;
 import Network.LoginAction;
 import Network.WebSocketClientHandler;
+import View.SearchPane;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -131,8 +132,40 @@ public class MessageController implements Initializable {
 			openFileChooser(e);
 		});
 
+		new_conversation_btn.setOnMouseClicked(event -> {
+			SearchPane searchPane = new SearchPane(new SearchPane.SearchCallback() {
+				@Override
+				public void onUserSelected(Partner partner) {
+					addMessageItemForUser(partner); // Thêm message-item cho người dùng được chọn
+				}
+			});
+			searchPane.visibleSearchPane();
+		});
+
 		// add message item into scrollpane "messageItemPanel"
 		addPartnersToChat();
+	}
+
+	public void addMessageItemForUser(Partner partner) {
+		try {
+			// Tạo một message-item mới
+			URL resource = getClass().getResource("/View/message-item.fxml");
+			if (resource == null) {
+				System.err.println("FXML file not found!");
+			}
+			FXMLLoader fxmlLoader = new FXMLLoader(resource);
+			fxmlLoader.setLocation(resource);
+
+			// Tạo AnchorPane cho message-item mới
+			AnchorPane anchorPane = fxmlLoader.load();
+			MessageItemController messageItemController = fxmlLoader.getController();
+			messageItemController.setParentController(this); // Đặt parent controller
+			messageItemController.showPartners(partner); // Hiển thị thông tin người dùng mới
+			chatters_vbox.getChildren().add(anchorPane); // Thêm message-item vào VBox
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void addPartnersToChat() {
@@ -147,9 +180,7 @@ public class MessageController implements Initializable {
 
 				AnchorPane anchorPane = fxmlLoader.load();
 				MessageItemController messageItemController = fxmlLoader.getController();
-
 				messageItemController.setParentController(this); // This is where you call it
-
 				messageItemController.showPartners(partner);
 				chatters_vbox.getChildren().add(anchorPane);
 
@@ -264,7 +295,7 @@ public class MessageController implements Initializable {
 		LocalDateTime currentDateTime = LocalDateTime.now();
 
 		// Định dạng thời gian theo kiểu "dd:mm:yyyy H:M:S"
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy H:m:s");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
 		String formattedTime = currentDateTime.format(formatter);
 		return formattedTime;
 

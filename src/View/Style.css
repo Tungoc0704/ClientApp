@@ -24,9 +24,14 @@
 	-fx-background-color: transparent;
 	-fx-cursor: hand;
 }
-.followBtn{
-	-fx-cursor: hand;
-	-fx-background-color: transparent;
-	-fx-text-fill: #199fff;
+
+.customize_btn{
+	-fx-background-color: #0095f6;
+	-fx-font-family: Arial Rounded MT Bold;
+	-fx-text-fill: WHITE;
+	-fx-background-radius: 30px;
+}
+.customize_btn:hover{
+	    -fx-cursor: hand;
 }
 

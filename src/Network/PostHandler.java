@@ -43,9 +43,8 @@ public class PostHandler {
 				outputStream.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
 				outputStream.flush();
 			}
-
+			// Xử lí phản hồi từ Server:
 			handleResponseFromServer(httpConnection);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

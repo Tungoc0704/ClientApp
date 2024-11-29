@@ -14,55 +14,55 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="506.0" prefWidth="756.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<AnchorPane prefHeight="506.0" prefWidth="756.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
 	<children>
-		<Pane layoutX="1.0" prefHeight="508.0" prefWidth="266.0">
+		<Pane layoutX="1.0" layoutY="-2.0" prefHeight="510.0" prefWidth="319.0">
 			<children>
-				<ImageView fitHeight="554.0" fitWidth="409.0" layoutX="-38.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+				<ImageView fitHeight="546.0" fitWidth="424.0" layoutX="-52.0" layoutY="-36.0" pickOnBounds="true" preserveRatio="true">
 					<image>
-						<Image url="@6e70cf15912f7d4da213cddc6aedccad.jpg" />
+						<Image url="@probar-thins-stylhaus-social.gif" />
 					</image>
 				</ImageView>
 			</children>
 		</Pane>
-		<Pane fx:id="login_fields" layoutX="276.0" layoutY="-14.0" prefHeight="524.0" prefWidth="492.0" style="-fx-background-color: white;">
+		<Pane fx:id="login_fields" layoutX="326.0" prefHeight="510.0" prefWidth="424.0" style="-fx-background-color: white;">
 			<children>
-				<TextField fx:id="username_field" layoutX="62.0" layoutY="158.0" prefHeight="39.0" prefWidth="369.0" promptText="Enter user name, phone, email" style="-fx-background-color: transparent; -fx-border-color: #E1E1E1; -fx-border-radius: 50px;" />
-				<Button fx:id="login_btn" defaultButton="true" layoutX="163.0" layoutY="273.0" mnemonicParsing="false" onMouseClicked="#submitLogin" prefHeight="30.0" prefWidth="167.0" style="-fx-background-color: linear-gradient(to right bottom,#FF3366,#BA265D); -fx-background-radius: 10px;" text="Đăng nhập" textFill="WHITE">
+				<TextField fx:id="username_field" layoutX="57.0" layoutY="158.0" prefHeight="39.0" prefWidth="336.0" promptText="Enter user name, phone, email" style="-fx-background-color: transparent; -fx-border-color: #E1E1E1; -fx-border-radius: 50px;" />
+				<Button fx:id="login_btn" defaultButton="true" layoutX="149.0" layoutY="273.0" mnemonicParsing="false" onMouseClicked="#submitLogin" prefHeight="30.0" prefWidth="167.0" style="-fx-background-color: linear-gradient(to right bottom,#FF3366,#BA265D); -fx-background-radius: 10px;" text="Login" textFill="WHITE">
 					<font>
 						<Font size="14.0" />
 					</font>
 				</Button>
 				<!-- <FontAwesomeIcon fill="#998989" glyphName="USER" layoutX="395.0" 
 					layoutY="183.0" size="1.5em" /> -->
-				<PasswordField fx:id="password_field" layoutX="62.0" layoutY="215.0" prefHeight="39.0" prefWidth="369.0" promptText="Enter password" style="-fx-background-color: WHITE; -fx-border-color: #E1E1E1;-fx-border-radius: 50px;" />
+				<PasswordField fx:id="password_field" layoutX="58.0" layoutY="215.0" prefHeight="39.0" prefWidth="336.0" promptText="Enter password" style="-fx-background-color: WHITE; -fx-border-color: #E1E1E1;-fx-border-radius: 50px;" />
 				<!-- <FontAwesomeIcon fill="#998989" glyphName="EYE" layoutX="393.0" 
 					layoutY="240.0" size="1.5em" /> -->
-				<Line endX="32.0" layoutX="173.0" layoutY="327.0" opacity="0.78" startX="-107.20001220703125" stroke="#d4d4d4" />
-				<Text fill="#969696" layoutX="237.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="OR">
+				<Line endX="32.0" layoutX="158.0" layoutY="326.0" opacity="0.78" startX="-107.20001220703125" stroke="#d4d4d4" />
+				<Text fill="#969696" layoutX="222.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="OR">
 					<font>
 						<Font name="System Bold" size="14.0" />
 					</font>
 				</Text>
-				<Line endX="32.0" layoutX="398.0" layoutY="325.0" opacity="0.78" startX="-107.20001220703125" stroke="#d4d4d4" />
-				<Text fx:id="login_with_facebook_btn" fill="#0088ff" layoutX="170.0" layoutY="392.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đăng nhập với Facebook">
+				<Line endX="32.0" layoutX="383.0" layoutY="325.0" opacity="0.78" startX="-107.20001220703125" stroke="#d4d4d4" />
+				<Text fx:id="login_with_facebook_btn" fill="#0088ff" layoutX="162.0" layoutY="392.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login with Facebook">
 					<font>
 						<Font name="Verdana" size="14.0" />
 					</font>
 				</Text>
-				<Circle fill="DODGERBLUE" layoutX="149.0" layoutY="386.0" radius="15.0" stroke="WHITE" strokeType="INSIDE" />
+				<Circle fill="DODGERBLUE" layoutX="140.0" layoutY="387.0" radius="10.0" stroke="WHITE" strokeType="INSIDE" />
 
-				<Text fx:id="forget_password" fill="#3b70f7" layoutX="205.0" layoutY="413.0" opacity="0.64" strokeType="OUTSIDE" strokeWidth="0.0" text="Quên mật khẩu ?">
+				<Text fx:id="forget_password" fill="#3b70f7" layoutX="192.0" layoutY="413.0" opacity="0.64" strokeType="OUTSIDE" strokeWidth="0.0" text="Quên mật khẩu ?">
 					<font>
 						<Font size="11.0" />
 					</font>
 				</Text>
-				<Text layoutX="112.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Instagram">
+				<Text layoutX="78.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Instagram">
 					<font>
 						<Font name="Poor Richard" size="72.0" />
 					</font>
 				</Text>
-            <Button fx:id="signup_btn" layoutX="184.0" layoutY="473.0" mnemonicParsing="false" styleClass="have_an_account_btn" stylesheets="@Style.css" text="Đăng ký tài khoản ? " textFill="#28009e" underline="true" />
+            <Button fx:id="signup_btn" layoutX="198.0" layoutY="471.0" mnemonicParsing="false" styleClass="have_an_account_btn" stylesheets="@Style.css" text="Sign up ? " textFill="#06040d" underline="true" />
 			</children>
 		</Pane>
 	</children>

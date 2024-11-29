@@ -1,6 +1,8 @@
 package Model;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable{
     private String poster;
     private String time;
     private String contentPost;

@@ -12,11 +12,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-//			Parent root = FXMLLoader.load(getClass().getResource("/View/Message-view.fxml"));
 			Parent root = FXMLLoader.load(getClass().getResource("/View/Login.fxml"));
 			Scene scene = new Scene(root);
-//			scene.getStylesheets().add(getClass().getResource("Login.fxml").toExternalForm());
-			primaryStage.setTitle("Login form");
+			primaryStage.setTitle("Instagram Like");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

@@ -31,9 +31,14 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import Common.ProfileService;
+import Common.UserService;
 
 public class NewfeedsController implements Initializable {
 	private PostController postController = new PostController();
@@ -41,6 +46,12 @@ public class NewfeedsController implements Initializable {
 	private MessageController messageController = new MessageController();
 
 	private SuggestedFollowerController suggestedFollowerController = new SuggestedFollowerController();
+
+	private UserProfileController userProfileController = new UserProfileController();
+
+	private ProfileService profileService;
+
+	private Redirect redirect = new Redirect();
 
 	@FXML
 	private GridPane gridPane;
@@ -56,6 +67,9 @@ public class NewfeedsController implements Initializable {
 
 	@FXML
 	private Button create_btn;
+
+	@FXML
+	private Button personal_btn;
 
 	private List<Post> posts = new ArrayList<>();
 
@@ -87,6 +101,16 @@ public class NewfeedsController implements Initializable {
 			create_btn.setOnMouseClicked(e -> {
 				postController.show_modal_create(e, create_btn);
 
+			});
+
+			// action open_profile:
+			personal_btn.setOnMouseClicked(p -> {
+				try {
+					profileService = (ProfileService) Naming.lookup("rmi://localhost/ProfileService");
+					redirect.redirectPage("/View/UserProfile.fxml", personal_btn);
+				} catch (IOException | NotBoundException e1) {
+					e1.printStackTrace();
+				}
 			});
 
 		} catch (Exception e) {

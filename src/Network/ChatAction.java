@@ -42,7 +42,7 @@ public class ChatAction {
 
 	public void receive_Relevant_Partner(DatagramSocket cSocket) {
 		try {
-			byte dataUsers[] = new byte[1024];
+			byte dataUsers[] = new byte[1024*5];
 			DatagramPacket packet = new DatagramPacket(dataUsers, dataUsers.length);
 			cSocket.receive(packet);
 			System.out.println("relevant partner: " + new String(packet.getData()));

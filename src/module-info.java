@@ -9,6 +9,7 @@ module helo {
 	requires javafx.media;
 	requires java.rmi;
 	requires jdk.httpserver;
+	requires java.net.http;
 
 	opens application to javafx.graphics, javafx.fxml;
 	opens Controller to javafx.fxml; // This line opens the Controller package to FXMLLoader
