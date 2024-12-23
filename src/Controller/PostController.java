@@ -6,8 +6,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import Model.Post;
+import Model.User;
 import Network.PostHandler;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -34,26 +40,21 @@ import javafx.stage.Stage;
 public class PostController {
 	private PostHandler postHandler = new PostHandler();
 
+	private NewfeedsController parentController;
+
 	private String filePath;
 
 	private List<Post> posts = new ArrayList<>();
 
-	public List<Post> getListPost() {
-		List<Post> listPosts = new ArrayList<>();
-		try {
+	public Stage modal;
 
-			for (int i = 0; i < 5; i++) {
-				Post post = new Post();
-				post.setPoster("tungocng.07");
-				post.setTime("Hôm nay");
-				post.setContentPost("Furniture project ........");
-				post.setAmountFavorite("20 lượt thích");
-//                post.setImageSrc("com/example/desktopapp/6e70cf15912f7d4da213cddc6aedccad.jpg");
-				listPosts.add(post);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void setParentController(NewfeedsController parentController) {
+		this.parentController = parentController;
+	}
+
+	public List<Post> getListPost() {
+		List<Post> listPosts = postHandler.requestLoadPost();
+		System.out.println("size post: " + listPosts.size());
 		return listPosts;
 
 	}
@@ -74,6 +75,7 @@ public class PostController {
 			AnchorPane anchorPane = fxmlLoader.load();
 
 			PostItemController postItemController = fxmlLoader.getController();
+
 			if (postItemController != null) {
 				postItemController.setDataPost(posts.get(i));
 			} else {
@@ -89,7 +91,7 @@ public class PostController {
 	public void show_modal_create(MouseEvent event, Button create_btn) {
 		try {
 			// Tạo một cửa sổ mới
-			Stage modal = new Stage();
+			modal = new Stage();
 			modal.initModality(Modality.WINDOW_MODAL); // Đặt cửa sổ này là modal
 			modal.initOwner(create_btn.getScene().getWindow()); // Modal phụ thuộc vào cửa sổ chính
 
@@ -243,15 +245,75 @@ public class PostController {
 		System.out.println("clicking....");
 		String postCaption = contentArea.getText();
 		if (!postCaption.equals("")) {
-			postHandler.sendImage_Video(getFilePath(), postCaption);
+			try {
+				JSONObject postJSON = postHandler.sendImage_Video(getFilePath(), postCaption);
+
+				// show new post len GUI:
+				Platform.runLater(() -> {
+					try {
+						uploadPost(postJSON);
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				});
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
 
 	public String getFilePath() {
 		String path = filePath.substring(6); // cắt bỏ 6 kí 6 kí tự đầu tiên "file:/"
+		System.out.println("image is choosed: " + path);
 		return path;
 
+	}
+
+	// show post on GUI
+	public void uploadPost(JSONObject postJSON) throws IOException, ParseException {
+
+		String userJSONString = (String) postJSON.get("uploadPerson"); // ket qua tra ve la 1 chuoi userJSON
+		JSONParser parser = new JSONParser();
+		JSONObject userJSON = (JSONObject) parser.parse(userJSONString);
+
+		User userUpload = new User(((Long) userJSON.get("userID")).intValue(), (String) userJSON.get("username"), null,
+				null, null, (String) userJSON.get("avatar"), null, (String) userJSON.get("nickname"));
+
+		String time = (String) postJSON.get("create_at");
+		String caption = (String) postJSON.get("caption");
+		String imageurl = (String) postJSON.get("image");
+
+		Post newPost = new Post(userUpload, time, imageurl, caption);
+
+		URL resource = getClass().getResource("/View/post-item.fxml");
+		if (resource == null) {
+			System.err.println("FXML file not found!");
+		}
+		FXMLLoader fxmlLoader = new FXMLLoader(resource);
+		fxmlLoader.setLocation(resource);
+
+		AnchorPane anchorPane = fxmlLoader.load();
+
+		PostItemController postItemController = fxmlLoader.getController();
+		if (postItemController != null) {
+			postItemController.setDataPost(newPost);
+		} else {
+			System.out.println("postItemController is null");
+		}
+
+		parentController.getGridPane().add(anchorPane, 1, 0);
+		GridPane.setMargin(anchorPane, new Insets(10));
+
+		// sau khi upload xong -> close contentInputScene:
+		closeContentPostScene();
+	}
+
+	public void closeContentPostScene() {
+		modal.close();
 	}
 
 }

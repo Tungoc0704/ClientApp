@@ -8,9 +8,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="662.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PostItemController">
+<AnchorPane prefHeight="662.0" prefWidth="608.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PostItemController">
 	<children>
-		<AnchorPane layoutX="-2.0" prefHeight="69.0" prefWidth="488.0" style="-fx-background-color: WHITE;">
+		<AnchorPane layoutX="-2.0" prefHeight="70.0" prefWidth="610.0" style="-fx-background-color: WHITE;">
 			<children>
 				<ImageView fx:id="avatar" fitHeight="34.0" fitWidth="28.0" layoutX="21.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
 					<image>
@@ -26,19 +26,19 @@
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>
-				<Label fx:id="date" layoutX="396.0" layoutY="23.0" text="1 ngày trước" textFill="#9a9a9a" />
+				<Label fx:id="date" layoutX="317.0" layoutY="22.0" prefHeight="18.0" prefWidth="244.0" text="1 ngày trước" textFill="#9a9a9a" wrapText="true" />
 			</children>
 		</AnchorPane>
-		<AnchorPane layoutY="69.0" prefHeight="358.0" prefWidth="488.0" style="-fx-background-color: WHITE;">
+		<AnchorPane layoutY="69.0" prefHeight="534.0" prefWidth="610.0" style="-fx-background-color: WHITE;">
 			<children>
-				<ImageView fx:id="imgPost" fitHeight="539.0" fitWidth="488.0" layoutX="-1.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+				<ImageView fx:id="imgPost" fitHeight="468.0" fitWidth="310.0" layoutX="132.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true">
 					<image>
-						<Image url="@Screenshot%202024-11-28%20225534.png" />
+						<Image url="@BlackFriday.jpg" />
 					</image>
 				</ImageView>
 			</children>
 		</AnchorPane>
-		<AnchorPane layoutY="472.0" prefHeight="189.0" prefWidth="488.0" style="-fx-background-color: WHITE;">
+		<AnchorPane layoutY="472.0" prefHeight="190.0" prefWidth="610.0" style="-fx-background-color: WHITE;">
 			<children>
 				<ImageView fx:id="tymBtn" fitHeight="21.0" fitWidth="20.0" layoutX="29.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
 					<image>
@@ -60,13 +60,13 @@
 						<Image url="@bookmark.png" />
 					</image>
 				</ImageView>
-				<Text layoutX="28.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="nameuser">
+				<Text fx:id="uploadPerson" layoutX="29.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="nameuser" wrappingWidth="171.37580108642578">
 					<font>
-						<Font name="System Bold" size="14.0" />
+						<Font name="Arial Rounded MT Bold" size="12.0" />
 					</font>
 				</Text>
-				<Text fx:id="contents" layoutX="110.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In the iconic Nave of the Grand Palais in Paris, a woman strides with confidence, setting the tone of the CHANEL.." wrappingWidth="338.13671875" />
-				<TextField layoutX="27.0" layoutY="137.0" prefHeight="25.0" prefWidth="433.0" promptText="Thêm bình luận..." style="-fx-background-color: WHITE;" />
+				<Text fx:id="contents" layoutX="177.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In the iconic Nave of the Grand Palais in Paris, a woman strides with confidence, setting the tone of the CHANEL.." wrappingWidth="374.9368209838867" />
+				<TextField layoutX="27.0" layoutY="137.0" prefHeight="26.0" prefWidth="542.0" promptText="Thêm bình luận..." style="-fx-background-color: WHITE;" />
 				<Label fx:id="countLike" layoutX="27.0" layoutY="43.0" text="8 lượt thích">
 					<font>
 						<Font name="System Bold" size="12.0" />

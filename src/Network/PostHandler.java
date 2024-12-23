@@ -10,110 +10,150 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import Model.Post;
+import Model.User;
 
 public class PostHandler {
 
-	// Phương thức gửi video / hình ảnh đến server:
-	public void sendImage_Video(String filePath, String caption) {
+	// request load posts khi login thanh cong:
+	public List<Post> requestLoadPost() {
+		List<Post> listPost = null;
 		try {
 			URL url = new URL("http://localhost:8081/api/posts");
 			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-			String boundary = "---MyBoundary";
 			httpConnection.setRequestMethod("POST");
-			httpConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-			httpConnection.setConnectTimeout(60000); // 30 seconds timeout
-			httpConnection.setReadTimeout(60000); // 30 seconds read timeout
+			httpConnection.setRequestProperty("Content-Type", "application/json");
 			httpConnection.setDoOutput(true);
 
-			try (OutputStream outputStream = httpConnection.getOutputStream()) {
-				// Gửi caption
-				sendFormData(outputStream, boundary, "caption", caption);
-				System.out.println("đã send caption file");
+			// sedn request:
+			String action = "REQUEST_LOAD_POST";
+			JSONObject json = new JSONObject();
+			json.put("action", action);
+			try (OutputStream os = httpConnection.getOutputStream()) {
+				os.write(json.toJSONString().getBytes("utf-8"));
+			}
 
-				// Gửi file
-				if (filePath != null && !filePath.isEmpty()) {
-					File file = new File(filePath);
-					sendFileData(outputStream, boundary, file);
-					System.out.println("đã send file data");
+			// receive list post:
+			int resposeCode = httpConnection.getResponseCode();
+			if (resposeCode == 200) { // Thành công
+				try (BufferedReader reader = new BufferedReader(
+						new InputStreamReader(httpConnection.getInputStream(), "utf-8"))) {
+					StringBuilder responseBuilder = new StringBuilder();
+					String line;
+					while ((line = reader.readLine()) != null) {
+						responseBuilder.append(line);
+					}
+					System.out.println("list post: " + responseBuilder);
+
+					listPost = handlePostArr(responseBuilder.toString());
+
 				}
-
-				// Đóng boundary
-				outputStream.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
-				outputStream.flush();
 			}
-			// Xử lí phản hồi từ Server:
-			handleResponseFromServer(httpConnection);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return listPost;
 	}
 
-	// Phương thức gửi form data (caption)
-	private void sendFormData(OutputStream outputStream, String boundary, String fieldName, String value)
-			throws IOException {
-		outputStream.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
-		outputStream.write(("Content-Disposition: form-data; name=\"" + fieldName + "\"\r\n\r\n")
-				.getBytes(StandardCharsets.UTF_8));
-		outputStream.write((value + "\r\n").getBytes(StandardCharsets.UTF_8));
-	}
-
-	// Phương thức gửi file data
-	private void sendFileData(OutputStream outputStream, String boundary, File file) throws IOException {
-		String fileName = file.getName();
-		String fileType = fileName.endsWith(".mp4") ? "video/mp4" : "image/png"; // Định nghĩa loại file
-
-		outputStream.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
-		outputStream.write(("Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"; extension=\""
-				+ getFileExtension(fileName) + "\"\r\n").getBytes(StandardCharsets.UTF_8));
-		outputStream.write(("Content-Type: " + fileType + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
-
-		try (FileInputStream fileInputStream = new FileInputStream(file)) {
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, bytesRead);
-			}
-		}
-
-		outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
-
-	}
-
-	// Xử lý phản hồi từ server
-	public void handleResponseFromServer(HttpURLConnection httpConnection) {
+	// Phương thức gửi video / hình ảnh đến server:
+	public JSONObject sendImage_Video(String filePath, String caption) {
+		JSONObject jsonObject = new JSONObject();
 		try {
-			int statusCode = httpConnection.getResponseCode();
-			BufferedReader reader;
-			if (statusCode == HttpURLConnection.HTTP_OK) {
-				reader = new BufferedReader(
-						new InputStreamReader(httpConnection.getInputStream(), StandardCharsets.UTF_8));
-				System.out.println("Post sent successfully!");
-			} else {
-				reader = new BufferedReader(
-						new InputStreamReader(httpConnection.getErrorStream(), StandardCharsets.UTF_8));
-				System.out.println("Failed to send post. Response code: " + statusCode);
+			URL url = new URL("http://localhost:8081/api/posts");
+			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+			httpConnection.setRequestMethod("POST");
+			httpConnection.setRequestProperty("Content-Type", "application/json");
+			httpConnection.setDoOutput(true);
+
+			// Gửi userId dưới dạng JSON (hoặc chuỗi thuần)
+			JSONObject json = new JSONObject();
+			json.put("action", "UPLOAD_POST");
+			json.put("uploadPerson", LoginAction.userID.intValue());
+			json.put("caption", caption);
+			json.put("image_url", filePath);
+			json.put("created_at", getTimePost());
+			try (OutputStream os = httpConnection.getOutputStream()) {
+				os.write(json.toJSONString().getBytes("utf-8"));
 			}
 
-			StringBuilder response = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				response.append(line.trim());
-			}
-			System.out.println("Response: " + response.toString());
-			reader.close();
+			// nhan tu server:
+			jsonObject = receiveFromServer(httpConnection);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return jsonObject;
 	}
 
-	// lấy phần extension của file:
+	// Lấy phần mở rộng của file:
 	public String getFileExtension(String fileName) {
-		// ví dụ file name là : abc.png;
-		String extension = fileName.substring(fileName.indexOf("."));
+		String extension = fileName.substring(fileName.lastIndexOf("."));
 		System.out.println("extension: " + extension);
 		return extension;
+	}
+
+	// time post
+	public String getTimePost() {
+		// Lấy thời gian hiện tại
+		LocalDateTime currentDateTime = LocalDateTime.now();
+
+		// Định dạng thời gian theo kiểu "dd:mm:yyyy H:M:S"
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
+		String formattedTime = currentDateTime.format(formatter);
+		return formattedTime;
+	}
+
+	public JSONObject receiveFromServer(HttpURLConnection connection) throws IOException, ParseException {
+		System.out.println("da nhan post...");
+		JSONObject receiveJSON = null;
+		int resposeCode = connection.getResponseCode();
+		if (resposeCode == 200) { // Thành công
+			try (BufferedReader reader = new BufferedReader(
+					new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+				StringBuilder responseBuilder = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					responseBuilder.append(line);
+				}
+
+				receiveJSON = (JSONObject) (new JSONParser().parse(responseBuilder.toString()));
+			}
+		}
+		return receiveJSON;
+	}
+
+	// xu li jsonArr listPost
+	public List<Post> handlePostArr(String postArrString) {
+		List listPost = new ArrayList<>();
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray arr = (JSONArray) parser.parse(postArrString);
+			for (int i = 0; i < arr.size(); i++) {
+				JSONObject responseJSON = (JSONObject) arr.get(i);
+				JSONObject userJSON = (JSONObject) responseJSON.get("user");
+				JSONObject postJSON = (JSONObject) responseJSON.get("post");
+
+				User userUpload = new User(((Long) userJSON.get("userID")).intValue(),
+						(String) userJSON.get("username"), null, null, null, (String) userJSON.get("avatar"), null,
+						(String) userJSON.get("nickname"));
+				Post post = new Post(userUpload, (String) postJSON.get("created_at"), (String) postJSON.get("imageUrl"),
+						(String) postJSON.get("caption"));
+				listPost.add(post);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listPost;
 	}
 }

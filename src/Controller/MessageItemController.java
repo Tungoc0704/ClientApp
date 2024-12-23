@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 
 public class MessageItemController {
 	private MessageController parentController;
@@ -63,6 +64,7 @@ public class MessageItemController {
 
 	@FXML
 	public void initialize() {
+		
 		// Set the action event
 		chatter_item.setOnMouseClicked(arg0 -> {
 			try {
@@ -72,6 +74,8 @@ public class MessageItemController {
 			}
 		});
 	}
+	
+	
 
 	public void detailConversation(MouseEvent event) throws IOException {
 		try {

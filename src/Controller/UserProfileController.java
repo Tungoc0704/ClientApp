@@ -1,5 +1,10 @@
 package Controller;
 
+import java.rmi.RemoteException;
+
+import org.json.simple.parser.ParseException;
+
+import Network.ProfileHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,18 +34,31 @@ public class UserProfileController {
 	@FXML
 	private Label usernameProfile;
 
+	private ProfileHandler profileHandler = new ProfileHandler();
+
 	@FXML
 	public void initialize() {
 		initImageView();
+
+		try {
+			profileHandler.receiveProfile(NewfeedsController.profileService, nicknameProfile, usernameProfile, numPost,
+					numFollower, numFollowing);
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void initImageView() {
 		// Tạo đối tượng Circle để cắt hình ảnh thành khuôn tròn
 		avt.setFitHeight(220);
 		avt.setFitWidth(220);
-		
+
 		Circle clip = new Circle();
-        clip.setRadius(Math.min(avt.getFitWidth(), avt.getFitHeight()) / 2); // Đặt bán kính dựa trên kích thước
+		clip.setRadius(Math.min(avt.getFitWidth(), avt.getFitHeight()) / 2); // Đặt bán kính dựa trên kích thước
 		clip.setCenterX(avt.getFitWidth() / 2); // Điều chỉnh vị trí tâm của Circle (giống kích thước ImageView)
 		System.out.println("fit width: " + avt.getFitWidth());
 		clip.setCenterY(avt.getFitHeight() / 2); // Điều chỉnh vị trí tâm của Circle (giống kích thước

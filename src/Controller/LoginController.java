@@ -80,13 +80,13 @@ public class LoginController {
 				String notify = loginAction.notify;
 				System.out.println("notify: " + notify);
 				if (notify != null) {
-					if (notify.equals("APPROPRIATE ACCOUNT")) {
+					if (loginAction.notify.equals("APPROPRIATE ACCOUNT")) {
 						// neu account correct (dang nhap thanh cong) thi Newfeed-view isVisible:
 						redirect.redirectPage("/View/Newfeeds-view.fxml", login_btn);
 
-					} else if (notify.equals("INCORRECT PASSWORD")) {
+					} else if (loginAction.notify.equals("INCORRECT PASSWORD")) {
 						showOptionPane("Thông báo", "Đăng nhập không thành công", "Sai mật khẩu !");
-					} else if (notify.equals("INCORRECT USERNAME")) {
+					} else if (loginAction.notify.equals("INCORRECT USERNAME")) {
 						showOptionPane("Thông báo", "Đăng nhập không thành công", "Tên đăng nhập sai !");
 					}
 				} else {

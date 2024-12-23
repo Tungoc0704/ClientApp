@@ -15,7 +15,7 @@
 	<children>
 		<AnchorPane layoutY="-1.0" prefHeight="803.0" prefWidth="97.0" style="-fx-border-width: 0px 1px 0px 0px; -fx-border-color: lightgrey;">
 			<children>
-				<Button layoutX="24.0" layoutY="59.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0">
+				<Button fx:id="homeBtn" layoutX="24.0" layoutY="59.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0">
 					<styleClass>
 						<String fx:value="format-btn" />
 						<String fx:value="home-btn" />
@@ -26,7 +26,7 @@
 						<Image url="@transparent-house-icon-5.jpg" />
 					</image>
 				</ImageView>
-				<Button layoutX="24.0" layoutY="134.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
+				<Button fx:id="searchBtn" layoutX="24.0" layoutY="134.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
 					<styleClass>
 						<String fx:value="format-btn" />
 						<String fx:value="home-btn" />
@@ -44,7 +44,7 @@
 						<String fx:value="home-btn" />
 					</styleClass>
 				</Button>
-				<Button layoutX="23.0" layoutY="336.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
+				<Button fx:id="messageBtn" layoutX="23.0" layoutY="336.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
 					<styleClass>
 						<String fx:value="format-btn" />
 						<String fx:value="home-btn" />
@@ -56,7 +56,7 @@
 						<String fx:value="home-btn" />
 					</styleClass>
 				</Button>
-				<Button layoutX="23.0" layoutY="402.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
+				<Button fx:id="notifyBtn" layoutX="23.0" layoutY="402.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
 					<styleClass>
 						<String fx:value="format-btn" />
 						<String fx:value="home-btn" />
@@ -68,13 +68,13 @@
 						<String fx:value="home-btn" />
 					</styleClass>
 				</Button>
-				<Button layoutX="23.0" layoutY="466.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
+				<Button fx:id="postBtn" layoutX="23.0" layoutY="466.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
 					<styleClass>
 						<String fx:value="format-btn" />
 						<String fx:value="home-btn" />
 					</styleClass>
 				</Button>
-				<Button layoutX="23.0" layoutY="534.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
+				<Button fx:id="profileBtn" layoutX="23.0" layoutY="534.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="43.0" stylesheets="@Style.css">
 					<styleClass>
 						<String fx:value="format-btn" />
 						<String fx:value="home-btn" />

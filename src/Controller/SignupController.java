@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
@@ -79,6 +80,14 @@ public class SignupController {
 			// check tính hợp lệ của các fields;
 			signupHandler.validateFields(email_phone_field, username_field, password_field, confirm_password_field,
 					showOptionPane, userService);
+		});
+
+		have_accountl_btn.setOnMouseClicked(event -> {
+			try {
+				new Redirect().redirectPage("/View/Login.fxml", have_accountl_btn);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 	}
 

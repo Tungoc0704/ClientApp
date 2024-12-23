@@ -2,6 +2,8 @@ package Controller;
 
 import Model.Post;
 import Network.ChatAction;
+import Network.PostHandler;
+import Network.ProfileHandler;
 import Network.SuggestFollowersHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,7 +51,7 @@ public class NewfeedsController implements Initializable {
 
 	private UserProfileController userProfileController = new UserProfileController();
 
-	private ProfileService profileService;
+	public static ProfileService profileService;
 
 	private Redirect redirect = new Redirect();
 
@@ -73,11 +75,18 @@ public class NewfeedsController implements Initializable {
 
 	private List<Post> posts = new ArrayList<>();
 
+	public GridPane getGridPane() {
+		return this.gridPane;
+	}
+
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
+//			new PostHandler().requestLoadPost();
+			
 			// load posts:
 			postController.loadPosts(gridPane);
+			postController.setParentController(this);
 
 			// load suggested followers:
 			suggestedFollowerController.loadSuggestFollower(vbox);
@@ -91,8 +100,12 @@ public class NewfeedsController implements Initializable {
 					chatAction.requestChat();
 
 					// show message-view.fxml:
-					messageController.open_message_view(arg0, message_btn);
-				} catch (IOException e) {
+					try {
+						redirect.redirectPage("/View/Message-view.fxml", message_btn);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			});
@@ -107,7 +120,11 @@ public class NewfeedsController implements Initializable {
 			personal_btn.setOnMouseClicked(p -> {
 				try {
 					profileService = (ProfileService) Naming.lookup("rmi://localhost/ProfileService");
+
 					redirect.redirectPage("/View/UserProfile.fxml", personal_btn);
+
+//					new ProfileHandler().receiveProfile(profileService, , usernameProfile, numPosts, numFollower,numFollowing);
+
 				} catch (IOException | NotBoundException e1) {
 					e1.printStackTrace();
 				}

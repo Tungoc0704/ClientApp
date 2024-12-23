@@ -3,6 +3,7 @@ package Controller;
 import Model.Post;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
@@ -23,6 +24,9 @@ public class PostItemController {
 	private Label date;
 
 	@FXML
+	private Text uploadPerson;
+
+	@FXML
 	private javafx.scene.image.ImageView imgPost;
 
 	@FXML
@@ -33,12 +37,25 @@ public class PostItemController {
 
 	@FXML
 	private javafx.scene.control.Label loader;
+
 	private Post post;
 
 	public void setDataPost(Post post) {
-		countLike.setText(post.getAmountFavorite());
+		countLike.setText("5 lượt thích");
+
 		date.setText(post.getTime());
-		loader.setText(post.getPoster());
+		date.wrapTextProperty();
+
+		loader.setText(post.getUser().getUsername());
+
+		imgPost.setImage(new Image(getClass().getResource("/View/" + post.getImageSrc()).toExternalForm()));
+
+		contents.setText(post.getContentPost());
+
+		avatar.setImage(
+				new Image(getClass().getResource("/View/" + post.getUser().getProfile_picture()).toExternalForm()));
+
+		uploadPerson.setText(post.getUser().getUsername());
 
 	}
 

@@ -7,6 +7,7 @@ import Network.LoginAction;
 import Network.WebSocketClientHandler;
 import View.SearchPane;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -48,6 +49,8 @@ import org.json.simple.JSONObject;
 public class MessageController implements Initializable {
 	public static WebSocketClientHandler webSocketClient; // WebSocket client toàn cục
 
+	private Redirect redirect = new Redirect();
+
 	private File file;
 
 	@FXML
@@ -81,6 +84,24 @@ public class MessageController implements Initializable {
 	private Button new_conversation_btn;
 
 	@FXML
+	private Button homeBtn;
+
+	@FXML
+	private Button messageBtn;
+
+	@FXML
+	private Button postBtn;
+
+	@FXML
+	private Button profileBtn;
+
+	@FXML
+	private Button searchBtn;
+
+	@FXML
+	private Button notifyBtn;
+
+	@FXML
 	private Label username_in_chatbox;
 
 	public ScrollPane getConversationPane() {
@@ -106,22 +127,64 @@ public class MessageController implements Initializable {
 	private List<Partner> partners = ChatAction.partnerList;
 
 	public void open_message_view(MouseEvent event, Button message_btn) throws IOException {
-		Parent message_view = FXMLLoader.load(getClass().getResource("/View/Message-view.fxml"));
-		Stage stage = (Stage) message_btn.getScene().getWindow();
-		stage.setScene(new Scene(message_view));
+		Platform.runLater(() -> {
+			Parent message_view;
+			try {
+				message_view = FXMLLoader.load(getClass().getResource("/View/Message-view.fxml"));
+				Stage stage = (Stage) message_btn.getScene().getWindow();
+				stage.setScene(new Scene(message_view));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 
 	}
 
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		// Khởi tạo kết nối WebSocket khi ứng dụng bắt đầu
 		try {
-			URI serverUri = new URI("ws://localhost:8080");
-			webSocketClient = new WebSocketClientHandler(serverUri, this);
-			webSocketClient.connect();
+			Platform.runLater(() -> {
+				URI serverUri;
+				try {
+					serverUri = new URI("ws://localhost:8080");
+					webSocketClient = new WebSocketClientHandler(serverUri, this);
+					webSocketClient.connect();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+			});
 
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// các btn trong navigation bar:
+		homeBtn.setOnMouseClicked(homeEvent -> {
+			// Khi click homeBtn:
+			try {
+				redirect.redirectPage("/View/Newfeeds-view.fxml", homeBtn);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
+		// Khi click MessageBtn:
+		messageBtn.setOnMouseClicked(messEvent -> {
+			try {
+				redirect.redirectPage("/View/Message-view.fxml", homeBtn);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
+		// khi click profileBtn:
+		profileBtn.setOnMouseClicked(profileEvent -> {
+			try {
+				redirect.redirectPage("/View/UserProfile.fxml", profileBtn);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 
 		send_message_btn.setOnMouseClicked(arg0 -> {
 			sendMessageEvent(arg0);

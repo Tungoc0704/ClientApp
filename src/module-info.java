@@ -17,5 +17,5 @@ module helo {
 	exports View;
 	exports Controller; // Add this line
 	exports Model;
-
+	exports Common;
 }
